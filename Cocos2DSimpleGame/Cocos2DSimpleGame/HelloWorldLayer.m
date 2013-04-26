@@ -221,6 +221,12 @@
     float velocity = 480 / 1; //480pixels/1sec
     float realMoveDuration = length / velocity;
     
+    //Determine angle to face
+    float angleRadians = atanf((float)offRealY / (float)offRealX);
+    float angleDegrees = CC_RADIANS_TO_DEGREES(angleRadians);
+    float cocosAngle = -1 * angleDegrees;
+    _player.rotation = cocosAngle;
+    
     //Move projectile to actual endpoint.
     [projectile runAction:[CCSequence actions:[CCMoveTo actionWithDuration:realMoveDuration position:realDest], [CCCallBlockN actionWithBlock:^(CCNode *node) {
         [node removeFromParentAndCleanup:YES];

@@ -232,6 +232,76 @@
         [node removeFromParentAndCleanup:YES];
         [_projectiles removeObject:node];
     }], nil]];
+    
+    /* 把下面的替换上面代码可使炮台有动画转动,但是有bug,点击炮台上下边后无法点击
+     
+     if (_nextProjectile != nil) return;
+     
+     // Choose one of the touches to work with
+     UITouch *touch = [touches anyObject];
+     CGPoint location = [self convertTouchToNodeSpace:touch];
+     
+     // Set up initial location of projectile
+     CGSize winSize = [[CCDirector sharedDirector] winSize];
+     _nextProjectile = [[CCSprite spriteWithFile:@"projectile2.png"] retain];
+     _nextProjectile.position = ccp(20, winSize.height/2);
+     
+     // Determine offset of location to projectile
+     CGPoint offset = ccpSub(location, _nextProjectile.position);
+     
+     // Bail out if you are shooting down or backwards
+     if (offset.x <= 0) return;
+     
+     // Determine where you wish to shoot the projectile to
+     int realX = winSize.width + (_nextProjectile.contentSize.width/2);
+     float ratio = (float) offset.y / (float) offset.x;
+     int realY = (realX * ratio) + _nextProjectile.position.y;
+     CGPoint realDest = ccp(realX, realY);
+     
+     // Determine the length of how far you're shooting
+     int offRealX = realX - _nextProjectile.position.x;
+     int offRealY = realY - _nextProjectile.position.y;
+     float length = sqrtf((offRealX*offRealX)+(offRealY*offRealY));
+     float velocity = 480/1; // 480pixels/1sec
+     float realMoveDuration = length/velocity;
+     
+     // Determine angle to face
+     float angleRadians = atanf((float)offRealY / (float)offRealX);
+     float angleDegrees = CC_RADIANS_TO_DEGREES(angleRadians);
+     float cocosAngle = -1 * angleDegrees;
+     float rotateDegreesPerSecond = 180 / 0.5; // Would take 0.5 seconds to rotate 180 degrees, or half a circle
+     float degreesDiff = _player.rotation - cocosAngle;
+     float rotateDuration = fabs(degreesDiff / rotateDegreesPerSecond);
+     [_player runAction:
+     [CCSequence actions:
+     [CCRotateTo actionWithDuration:rotateDuration angle:cocosAngle],
+     [CCCallBlock actionWithBlock:^{
+     // OK to add now - rotation is finished!
+     [self addChild:_nextProjectile];
+     [_projectiles addObject:_nextProjectile];
+     
+     // Release
+     [_nextProjectile release];
+     _nextProjectile = nil;
+     }],
+     nil]];
+     
+     // Move projectile to actual endpoint
+     [_nextProjectile runAction:
+     [CCSequence actions:
+     [CCMoveTo actionWithDuration:realMoveDuration position:realDest],
+     [CCCallBlockN actionWithBlock:^(CCNode *node) {
+     [_projectiles removeObject:node];
+     [node removeFromParentAndCleanup:YES];
+     }],
+     nil]];
+     
+     _nextProjectile.tag = 2;
+     
+     [[SimpleAudioEngine sharedEngine] playEffect:@"pew-pew-lei.caf"];
+     
+     
+     **/
 }
 
 @end
